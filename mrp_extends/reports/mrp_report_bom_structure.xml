@@ -1,0 +1,72 @@
+<odoo>
+    <template id="report_mrp_bom_inherit_mrp_extends" inherit_id="mrp.report_mrp_bom">
+        <xpath expr="//table[@class='o_mrp_bom_expandable']/tbody/tr/td[6]" position="replace">
+            <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_bom_cost text-right">
+                <span>
+                     <t t-esc="currency.symbol"/>
+                     <t t-esc="data['bom_cost']" t-options='{"widget": "float", "precision": 5}'/>
+                </span>
+            </td>
+        </xpath>
+         <xpath expr="//table[@class='o_mrp_bom_expandable']/tbody/tr/td[5]" position="replace">
+            <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_bom_cost text-right">
+                <span>
+                     <t t-esc="currency.symbol"/>
+                     <t t-esc="data['price']" t-options='{"widget": "float", "precision": 5}'/>
+                </span>
+            </td>
+        </xpath>
+
+        <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot/tr/td[5]" position="replace">
+            <td class="text-right">
+                <span>
+                    <t t-esc="currency.symbol"/>
+                    <t t-esc="data['price']/data['bom_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
+            </td>
+        </xpath>
+
+        <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot/tr/td[6]" position="replace">
+            <td class="text-right">
+                <span>
+                    <t t-esc="currency.symbol"/>
+                    <t t-esc="data['cost_share'] * data['total'] / data['bom_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
+            </td>
+        </xpath>
+
+        <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot/t/tr/td[5]" position="replace">
+            <td class="text-right">
+                <span>
+                    <t t-esc="currency.symbol"/>
+                    <t t-esc="byproduct['product_cost'] / byproduct['product_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
+            </td>
+        </xpath>
+
+        <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot/t/tr/td[6]" position="replace">
+            <td class="text-right">
+                <span>
+                    <t t-esc="currency.symbol"/>
+                    <t t-esc="byproduct['cost_share'] * data['total'] / byproduct['product_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
+            </td>
+        </xpath>
+    </template>
+
+     <template id="report_mrp_bom_line_inherit_mrp_extends" inherit_id="mrp.report_mrp_bom_line">
+         <xpath expr="//td[@class='o_mrp_prod_cost text-right']" position="replace">
+             <td class="o_mrp_prod_cost text-right">
+                 <span>
+                      <t t-esc="currency.symbol"/>
+                <t t-esc="l['prod_cost']" t-options='{"widget": "float", "precision": 5}'/>
+                 </span>
+            </td>
+         </xpath>
+
+           <xpath expr="//td[@class='o_mrp_bom_cost text-right']" position="replace">
+             <td class="o_mrp_bom_cost text-right">
+                 <span>
+                      <t t-esc="currency.symbol"/>
+                <t t-esc="l['total']" t-options='{"widget": "float", "precision": 5}'/>
+                 </span>
+            </td>
+         </xpath>
+     </template>
+</odoo>
