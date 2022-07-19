@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+  <record id="view_product_packaging_inherit_form" model="ir.ui.view">
+    <field name="name">product.packaging.inherit.form</field>
+    <field name="model">product.packaging</field>
+    <field name="inherit_id" ref="product.product_packaging_form_view"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='product_id']" position="after">
+             <field name="currency_id" invisible="1"/>
+            <field name="cost_per_package" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+        </xpath>
+    </field>
+  </record>
+
+       <record id="product.product_packaging_tree_view2" model="ir.ui.view">
+            <field name="name">product.packaging.tree.view2</field>
+            <field name="model">product.packaging</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="replace"/>
+                <xpath expr="//tree[@name='packaging']" position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </xpath>
+                <xpath expr="//field[@name='product_uom_id']" position="after">
+                   <field name="currency_id" invisible="1"/>
+                    <field name="cost_per_package" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

@@ -133,12 +133,12 @@
               </td>
                 <td class="text-right">
                      <span>
-                         <span t-if="'quantity_amount' in l" t-esc="l['quantity_amount']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                         <span t-if="l['type'] in ['bom', 'byproduct']" t-esc="l['quantity_amount']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                   </span>
                 </td>
                 <td class="text-right">
                      <span>
-                         <span t-if="'decrease_percent' in l" t-esc="l['decrease_percent']">%</span>
+                         <span t-if="l['type'] in ['bom', 'byproduct']" t-esc="l['decrease_percent']">%</span>
                   </span>
                 </td>
               <td class="text-right">
