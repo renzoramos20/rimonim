@@ -1,56 +1,106 @@
 <odoo>
     <template id="report_mrp_bom_inherit_mrp_extends" inherit_id="mrp.report_mrp_bom">
-        <xpath expr="//table[@class='o_mrp_bom_expandable']/tbody/tr/td[6]" position="replace">
-            <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_bom_cost text-right">
-                <span>
-                     <t t-esc="currency.symbol"/>
-                     <t t-esc="data['bom_cost']" t-options='{"widget": "float", "precision": 5}'/>
-                </span>
-            </td>
+        <xpath expr="//table[@class='o_mrp_bom_expandable']/thead/tr/th[3]" position="replace">
+            <th class="text-right">Quantity</th>
+            <th class="text-right">Decrease %</th>
+            <th class="text-right">Final Quantity</th>
         </xpath>
-         <xpath expr="//table[@class='o_mrp_bom_expandable']/tbody/tr/td[5]" position="replace">
-            <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_bom_cost text-right">
-                <span>
+
+        <xpath expr="//table[@class='o_mrp_bom_expandable']/tbody/tr" position="replace">
+            <tr>
+                <td>
+                    <span><a href="#" t-if="data['report_type'] == 'html'" t-att-data-res-id="data['product'].id" t-att-data-model="'product.product'" class="o_mrp_bom_action"><t t-esc="data['bom_prod_name']"/></a><t t-else="" t-esc="data['bom_prod_name']"/></span>
+                </td>
+                <td name="td_mrp_bom">
+                    <div><a href="#" t-if="data['report_type'] == 'html'" t-att-data-res-id="data['bom'].id" t-att-data-model="'mrp.bom'" class="o_mrp_bom_action"><t t-esc="data['code']"/></a><t t-else="" t-esc="data['code']"/></div>
+                </td>
+                <td></td>
+                <td></td>
+                <td class="text-right"><span><t t-esc="data['bom_qty']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></span></td>
+                <td groups="uom.group_uom"><span><t t-esc="data['bom'].product_uom_id.name"/></span></td>
+                <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost text-right">
+                    <span>
                      <t t-esc="currency.symbol"/>
                      <t t-esc="data['price']" t-options='{"widget": "float", "precision": 5}'/>
                 </span>
-            </td>
+                </td>
+                <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_bom_cost text-right">
+                    <span>
+                     <t t-esc="currency.symbol"/>
+                     <t t-esc="data['bom_cost']" t-options='{"widget": "float", "precision": 5}'/>
+                </span>
+                </td>
+                <td t-if="data['report_type'] == 'html'">
+                    <span>
+                        <t t-if="data['attachments']">
+                            <a href="#" role="button" t-att-data-res-id="data['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fa fa-fw o_button_icon fa-files-o"/>
+                        </t>
+                    </span>
+                </td>
+            </tr>
         </xpath>
 
-        <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot/tr/td[5]" position="replace">
-            <td class="text-right">
-                <span>
-                    <t t-esc="currency.symbol"/>
-                    <t t-esc="data['price']/data['bom_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
-            </td>
-        </xpath>
-
-        <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot/tr/td[6]" position="replace">
-            <td class="text-right">
-                <span>
-                    <t t-esc="currency.symbol"/>
-                    <t t-esc="data['cost_share'] * data['total'] / data['bom_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
-            </td>
-        </xpath>
-
-        <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot/t/tr/td[5]" position="replace">
-            <td class="text-right">
-                <span>
-                    <t t-esc="currency.symbol"/>
-                    <t t-esc="byproduct['product_cost'] / byproduct['product_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
-            </td>
-        </xpath>
-
-        <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot/t/tr/td[6]" position="replace">
-            <td class="text-right">
-                <span>
-                    <t t-esc="currency.symbol"/>
-                    <t t-esc="byproduct['cost_share'] * data['total'] / byproduct['product_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
-            </td>
+         <xpath expr="//table[@class='o_mrp_bom_expandable']/tfoot" position="replace">
+            <tfoot>
+                                    <tr t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost">
+                                        <td></td>
+                                        <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                                            <td/>
+                                        </t>
+                                        <td name="td_mrp_bom_f" class="text-right">
+                                            <span><t t-if="data['byproducts']" t-esc="data['bom_prod_name']"/></span>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><span><strong>Unit Cost</strong></span></td>
+                                        <td groups="uom.group_uom"><span><t t-esc="data['bom'].product_uom_id.name"/></span></td>
+                                        <td class="text-right">
+                                            <span>
+                                                <t t-esc="currency.symbol"/>
+                                                <t t-esc="data['price']/data['bom_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
+                                        </td>
+                                        <td class="text-right">
+                                           <span>
+                                                <t t-esc="currency.symbol"/>
+                                                <t t-esc="data['cost_share'] * data['total'] / data['bom_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
+                                        </td>
+                                    </tr>
+                                    <t t-if="data['report_structure'] != 'bom_structure'" t-foreach="data['byproducts']" t-as="byproduct">
+                                        <tr class="o_mrp_bom_cost">
+                                            <td/>
+                                            <t t-foreach="range(data.get('extra_column_count', 0))" t-as="index">
+                                                <td/>
+                                            </t>
+                                            <td name="td_mrp_bom_byproducts_f" class="text-right">
+                                                <span><t t-esc="byproduct['product_name']"/></span>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-right"><span><strong>Unit Cost</strong></span></td>
+                                            <td groups="uom.group_uom"><span><t t-esc="byproduct['product_uom']"/></span></td>
+                                            <td class="text-right">
+                                               <span>
+                                                <t t-esc="currency.symbol"/>
+                                                <t t-esc="byproduct['product_cost'] / byproduct['product_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
+                                            </td>
+                                            <td class="text-right">
+                                                <span>
+                                                <t t-esc="currency.symbol"/>
+                                                <t t-esc="byproduct['cost_share'] * data['total'] / byproduct['product_qty']" t-options='{"widget": "float", "precision": 5}'/></span>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tfoot>
         </xpath>
     </template>
 
      <template id="report_mrp_bom_line_inherit_mrp_extends" inherit_id="mrp.report_mrp_bom_line">
+         <xpath expr="//t[@t-as='l']/tr/td[3]" position="replace">
+             <td class="text-right"><span><t t-esc="l['quantity_amount']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></span></td>
+             <td class="text-right"><span><t t-esc="int(l['decrease_percent'])"/>%</span></td>
+            <td class="text-right"><span><t t-esc="l['prod_qty']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></span></td>
+         </xpath>
+
          <xpath expr="//td[@class='o_mrp_prod_cost text-right']" position="replace">
              <td class="o_mrp_prod_cost text-right">
                  <span>
@@ -69,4 +119,43 @@
             </td>
          </xpath>
      </template>
+
+    <template id="report_mrp_bom_line_pdf_inherit_mrp_extends" inherit_id="mrp.report_mrp_bom_pdf_line">
+        <xpath expr="//tr" position="replace">
+            <tr t-if="data['report_structure'] != 'bom_structure' or l['type'] not in ['operation', 'byproduct']">
+              <td>
+                  <div t-att-style="space_td">
+                    <div><t t-esc="l['name']"/></div>
+                  </div>
+              </td>
+              <td name="td_mrp_code">
+                  <div t-if="l.get('code')" t-esc="l['code']" />
+              </td>
+                <td class="text-right">
+                     <span>
+                         <span t-if="'quantity_amount' in l" t-esc="l['quantity_amount']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                  </span>
+                </td>
+                <td class="text-right">
+                     <span>
+                         <span t-if="'decrease_percent' in l" t-esc="l['decrease_percent']">%</span>
+                  </span>
+                </td>
+              <td class="text-right">
+                  <span>
+                      <t t-if="l['type'] == 'operation'" t-esc="l['quantity']" t-options='{"widget": "float_time"}'/>
+                      <t t-if="l['type'] in ['bom', 'byproduct']" t-esc="l['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                  </span>
+              </td>
+              <td groups="uom.group_uom"><span><t t-esc="l['uom']"/></span></td>
+              <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_prod_cost text-right">
+                  <span t-if="'prod_cost' in l" t-esc="l['prod_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+              </td>
+              <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_bom_cost text-right">
+                  <span t-esc="l['bom_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+              </td>
+          </tr>
+        </xpath>
+
+    </template>
 </odoo>
